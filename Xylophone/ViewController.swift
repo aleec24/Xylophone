@@ -18,22 +18,25 @@ class ViewController: UIViewController {
     }
 
     @IBAction func keyPressed(_ sender: UIButton) {
-        
-        playSound()
+
+        playSound(soundName: sender.titleLabel?.text ?? "")
     }
     
-    func playSound() {
-        guard let url = Bundle.main.url(forResource: "Sounds/C", withExtension: "wav") else { return }
+    func playSound(soundName: String) { 
+        //Look in project disk the indicated resource
+        guard let url = Bundle.main.url(forResource: "Sounds/\(soundName)", withExtension: "wav") else { return }
 
         do {
+            //even if the mobile is in "Sound Off" Mode, it will execute the sound
             try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
             try AVAudioSession.sharedInstance().setActive(true)
 
-            /* The following line is required for the player to work on iOS 11. Change the file type accordingly*/
+            // Player variable find the sound by URL
             player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
 
             guard let player = player else { return }
 
+            //Plays the sound
             player.play()
 
         } catch let error {
