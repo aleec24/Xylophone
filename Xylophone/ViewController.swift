@@ -11,37 +11,47 @@ import AVFoundation //AudioVisualFoundationalModule
 class ViewController: UIViewController {
     
     var player: AVAudioPlayer!
-
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view.
     }
-
-    @IBAction func keyPressed(_ sender: UIButton) {
-
-        playSound(soundName: sender.titleLabel?.text ?? "")
-    }
     
-    func playSound(soundName: String) { 
-        //Look in project disk the indicated resource
-        guard let url = Bundle.main.url(forResource: "Sounds/\(soundName)", withExtension: "wav") else { return }
-
-        do {
-            //even if the mobile is in "Sound Off" Mode, it will execute the sound
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
-            try AVAudioSession.sharedInstance().setActive(true)
-
-            // Player variable find the sound by URL
-            player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
-
-            guard let player = player else { return }
-
-            //Plays the sound
-            player.play()
-
-        } catch let error {
-            print(error.localizedDescription)
+    @IBAction func keyPressed(_ sender: UIButton) {
+        
+        playSound(soundName: sender.titleLabel?.text ?? "")
+        
+        //Reduce button opacity
+        sender.alpha = 0.8
+        
+        
+        //Get button opacitys back after 0.3 seg
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3 ) {
+            sender.alpha = 1.0
+        }
+        
+        func playSound(soundName: String) {
+            
+            //Look in project disk the indicated resource
+            guard let url = Bundle.main.url(forResource: "Sounds/\(soundName)", withExtension: "wav") else { return }
+            
+            do {
+                //even if the mobile is in "Sound Off" Mode, it will execute the sound
+                try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+                try AVAudioSession.sharedInstance().setActive(true)
+                
+                // Player variable find the sound by URL
+                player = try AVAudioPlayer(contentsOf: url, fileTypeHint: AVFileType.mp3.rawValue)
+                
+                guard let player = player else { return }
+                
+                //Plays the sound
+                player.play()
+                
+            } catch let error {
+                print(error.localizedDescription)
+            }
         }
     }
+    
 }
-
